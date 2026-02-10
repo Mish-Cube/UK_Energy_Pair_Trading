@@ -1,0 +1,77 @@
+Pair Trading Methodology
+
+1) Find two stocks (instruments) that are causally related
+2) Find the linear combination of them that has a time series mean of zero
+3) Bet that a deviation from zero will return to zero
+
+In more depth:
+
+1)  Correlation is easy to find, partly because random noise generates tons of non-causal correlation.
+    Trying to find genuine causal relationships isn't easy, and we use mostly non-mathematical methods
+    for this bit, e.g. here we find two energy stocks that are correlated, and assume there's some causal
+    factor that we can trust (oil supply, new green technology, etc etc) to affect both.
+
+    The Engel-Granger test (1987) is designed to take us from 1) to 2): take two time series whose means
+    vary over time, and who correlate with each other, and produce a time series whose mean is stable. To
+    do this we need our two time series to be I(1): order of integration 1. This means that the mean varies,
+    however on short (?) time scales [for trading, this might mean e.g. over one day] fluctuations don't
+    affect the mean. There will exist a combination of both that is I(0): even long term fluctuations don't
+    affect the mean.
+
+    https://warwick.ac.uk/fac/soc/economics/staff/gboero/personal/hand2_cointeg.pdf
+    https://en.wikipedia.org/wiki/Cointegration
+
+    To begin, we verify that out two series are indeed I(1) by using the ADF test. This does something along
+    the lines of testing for reversion to the mean in a random walk - H_0 is "random walk", so an ADF
+    statistic close to zero is insufficient to reject the null hypothesis (non-stationary). A highly
+    negative ADF statistic (-3 ish) is sufficient to conclude reversion to the mean (stationary).
+
+    https://en.wikipedia.org/wiki/Augmented_Dickey%E2%80%93Fuller_test
+
+   | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+   | In our data, we find all four UK energy stocks are likely to have I(1).         |
+   |                                                                                 |
+   | We first conclude the order of integration is larger than 0 - this is typically |
+   | sufficient for concluding I(1), as I(2) or higher order behaviour is indicative |
+   | of extremely nonstandard market behaviour. For completeness, we check conclude  |
+   | for I(2) behaviour and find no evidence, allowing a confident belief in I(1).   |
+   |                                                                                 |
+   | Now all I(1) stocks can be cointegration tested.                                |
+   | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+
+    With four I(1) stocks, and therefore 6 possible pairs to test, Engel-Granger was run.
+
+    No test statistic surpassed -3.05 (all p-values were larger than 0.1), implying no
+    significantly cointegrated pairs exist in our small data set. The closest result was
+    SSE (formerly Scottish & Southern Energy) vs NG (National Grid), at 0.1004.
+
+2)  With a Hedge ratio of 2.10 and an Intercept of -475, these two produce a fairly
+    robust looking mean-reverting spread (epsilon(t)).
+
+    Having trained on the complete timeline of data (2018-2026), we're going to get
+    overfit results if we try to backtest on our data set. Instead, a rolling window
+    approach will be used. After 252 data points (1 year), and every 21 data points
+    (1 month) thereafter, a beta value will be calculated based on all available past
+    data.
+
+    Beta, in this case, varies between 0.64 and 2.1. This 3x fluctuation is indicative of
+    high variability, for very weakly cointegrated stocks. The initial poor p-value seems
+    to have successfully predicted that SSE and NG are not a stable pair to trade on.
+
+    Having identified this, we will not proceed with simulating profits from trading on
+    these stocks from 2019-2026. To close, we investigate briefly the business models of
+    SSE vs NG in the last 8 years.
+
+https://www.nationalgrid.com/document/560311/download
+https://www.sse.com/about-us/our-businesses/
+
+SSE and NG are both primarily UK based energy companies, with NG also covering north
+eastern US. SSE exclusively focuses on energy, and is actively trying to transition
+into renewable energy. NG, however, deals in both energy and gas. They clearly have a
+larger invested interest in the success of gas as an energy source - it follows that
+the business strategies of these two companies would look very different, especially
+as technologies and policies across the industry change, causing asymmetric effects.
+
+With larger sets of historical data, or more energy companies, it is possible that a
+stronger cointegration effect is found among UK energy suppliers. Our recommendation
+here us to avoid using only modern data when pair trading leading UK energy stocks.
