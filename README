@@ -7,8 +7,9 @@ Pair Trading Methodology
 In more depth:
 
 1)  Correlation is easy to find, partly because random noise generates tons of non-causal correlation.
-    Trying to find genuine causal relationships isn't easy, and we use mostly non-mathematical methods
-    for this bit, e.g. here we find two energy stocks that are correlated, and assume there's some causal
+    Trying to find correlations that we expect to hold with time (some causal pathway influencing both)
+    isn't easy, and we use mostly non-mathematical methods for this bit,
+    e.g. here we find two energy stocks that are correlated, and assume there's some causal
     factor that we can trust (oil supply, new green technology, etc etc) to affect both.
 
     The Engel-Granger test (1987) is designed to take us from 1) to 2): take two time series whose means
@@ -21,7 +22,7 @@ In more depth:
     https://warwick.ac.uk/fac/soc/economics/staff/gboero/personal/hand2_cointeg.pdf
     https://en.wikipedia.org/wiki/Cointegration
 
-    To begin, we verify that out two series are indeed I(1) by using the ADF test. This does something along
+    To begin, we verify that our two series are indeed I(1) by using the ADF test. This does something along
     the lines of testing for reversion to the mean in a random walk - H_0 is "random walk", so an ADF
     statistic close to zero is insufficient to reject the null hypothesis (non-stationary). A highly
     negative ADF statistic (-3 ish) is sufficient to conclude reversion to the mean (stationary).
@@ -43,7 +44,7 @@ In more depth:
 
     No test statistic surpassed -3.05 (all p-values were larger than 0.1), implying no
     significantly cointegrated pairs exist in our small data set. The closest result was
-    SSE (formerly Scottish & Southern Energy) vs NG (National Grid), at 0.1004.
+    SSE (formerly Scottish & Southern Energy) vs NG (National Grid), at p-value 0.1004.
 
 2)  With a Hedge ratio of 2.10 and an Intercept of -475, these two produce a fairly
     robust looking mean-reverting spread (epsilon(t)).
