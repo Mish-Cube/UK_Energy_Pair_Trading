@@ -1,6 +1,6 @@
 Pair Trading Methodology
 
-1) Find two stocks (instruments) that are causally related
+1) Find two stocks (instruments) that are correlated
 2) Find the linear combination of them that has a time series mean of zero
 3) Bet that a deviation from zero will return to zero
 
